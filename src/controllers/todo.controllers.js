@@ -2,15 +2,17 @@ import Todo from "../models/todo.models.js";
 
 // GET all todos
 const getAllTodosHandler = async (req, res) => {
-  const todos = await Todo.find({}).sort({ createdAt: -1 });
+  const user_id = req.user._id;
+  const todos = await Todo.find({ createdBy: user_id }).sort({ createdAt: -1 });
   return res.status(200).json({ todos });
 };
 
 // GET todo by id
 const getTodoByIdHandler = async (req, res) => {
+  const user_id = req.user._id;
   try {
     const { todoId } = req.params;
-    const todo = await Todo.findById(todoId);
+    const todo = await Todo.findOne({ _id: todoId, createdBy: user_id });
     if (!todo) {
       throw new Error("Todo does not exist!");
     }
@@ -23,8 +25,10 @@ const getTodoByIdHandler = async (req, res) => {
 // CREATE a todo
 const createTodoHandler = async (req, res) => {
   const { title } = req.body;
+  const user = req.user;
   try {
     const todo = await Todo.create({
+      createdBy: user._id,
       title,
     });
     return res.status(201).json(todo);
@@ -35,9 +39,13 @@ const createTodoHandler = async (req, res) => {
 
 // DELETE todo
 const deleteTodoHandler = async (req, res) => {
+  const user_id = req.user._id;
   const { todoId } = req.params;
   try {
-    const todo = await Todo.findByIdAndDelete(todoId);
+    const todo = await Todo.findOneAndDelete({
+      _id: todoId,
+      createdBy: user_id,
+    });
     if (!todo) {
       throw new Error("Todo does not exist!");
     }
@@ -49,14 +57,16 @@ const deleteTodoHandler = async (req, res) => {
 
 // UPDATE todo
 const updateTodoHandler = async (req, res) => {
+  const user_id = req.user._id;
   const { todoId } = req.params;
-  const { title } = req.body;
+  const { title, completed } = req.body;
   try {
-    const todo = await Todo.findByIdAndUpdate(
-      todoId,
+    const todo = await Todo.findOneAndUpdate(
+      { _id: todoId, createdBy: user_id },
       {
         $set: {
           title,
+          completed
         },
       },
       { new: true }

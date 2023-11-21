@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import connectDB from "./db/index.js";
 import todoRouter from "./routes/todo.routes.js";
+import userRouter from "./routes/user.routes.js";
 
 dotenv.config({
   path: "./.env",
@@ -17,6 +18,7 @@ app.use(express.urlencoded({ extended: false })); // body parsing
 
 // api routes
 app.use("/api/todos", todoRouter);
+app.use("/api/users", userRouter);
 
 /**
  * DB connection and server instance
