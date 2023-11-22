@@ -1,9 +1,10 @@
-import React from 'react'
-import Button from '@mui/material/Button';
+import React from "react";
+import TodoHome from "./pages/TodoHome.jsx";
+
 const App = () => {
   return (
-    <Button variant="contained">Hello world</Button>
-  )
-}
+    <TodoHome />
+  );
+};
 
-export default App
+export default App;
