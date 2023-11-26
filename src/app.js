@@ -1,5 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
+import cors from "cors";
+
 import connectDB from "./db/index.js";
 import todoRouter from "./routes/todo.routes.js";
 import userRouter from "./routes/user.routes.js";
@@ -11,10 +13,22 @@ const app = express();
 
 /**
  * required middlewares
- * for json and body parsing
+ * for cors, json and body parsing
  */
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+); // * origin allowed
 app.use(express.json()); // json parser
 app.use(express.urlencoded({ extended: false })); // body parsing
+
+// end points logger
+app.use((req, res, next) => {
+  console.log(req.method, req.path);
+  next();
+});
 
 // api routes
 app.use("/api/todos", todoRouter);

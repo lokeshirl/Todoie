@@ -3,8 +3,13 @@ import Todo from "../models/todo.models.js";
 // GET all todos
 const getAllTodosHandler = async (req, res) => {
   const user_id = req.user._id;
-  const todos = await Todo.find({ createdBy: user_id }).sort({ createdAt: -1 });
-  return res.status(200).json({ todos });
+  const todos = await Todo.find(
+    { createdBy: user_id },
+    { __v: 0, updatedAt: 0 }
+  ).sort({
+    createdAt: -1,
+  });
+  return res.status(200).json(todos);
 };
 
 // GET todo by id
@@ -66,7 +71,7 @@ const updateTodoHandler = async (req, res) => {
       {
         $set: {
           title,
-          completed
+          completed,
         },
       },
       { new: true }

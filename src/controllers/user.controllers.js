@@ -36,7 +36,7 @@ const userLoginHandler = async (req, res) => {
       email: user.email,
     };
     const token = createToken(payloadForSigningToken);
-    res.status(201).json({ email, token });
+    res.status(200).json({ email, token });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
