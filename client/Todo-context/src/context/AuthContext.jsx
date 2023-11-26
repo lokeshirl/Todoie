@@ -48,7 +48,7 @@ const AuthProvider = ({ children }) => {
     setUser(null);
     setError(null);
     setIsLoading(false);
-    LocalStorage.removeItem("user"); // remove token from localhost for logout action
+    LocalStorage.remove("user"); // remove token from localhost for logout action
     navigate("/login"); // redirect user to the login page after logged out
   };
 
